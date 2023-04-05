@@ -85,9 +85,6 @@ extension CategoryCollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
-        let oneCellWidth = view.frame.width * 0.90
-
-        let cellsTotalWidth = oneCellWidth * 1
 
         return UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16)
     }
