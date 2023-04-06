@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct CategoryResults: Decodable {
+struct CategoryResults: Codable {
     let categories: [Category]
 }
 
-struct Category: Decodable {
+struct Category: Codable {
     let id: String
     let name: String
     let thumbnail: String

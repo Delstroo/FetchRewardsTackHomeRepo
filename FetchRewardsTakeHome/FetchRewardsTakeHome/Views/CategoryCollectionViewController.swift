@@ -31,17 +31,21 @@ class CategoryCollectionViewController: UICollectionViewController {
     
     
     func fetchCategories() {
-        CategoryCollectionViewModel.fetchCategoryList { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(categories):
-                    self.categories = categories
-                    self.collectionView.reloadData()
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
+        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/categories.php")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        NetworkAgent().fetch(request) { (result: Result<CategoryResults, ErrorHandler>) in
+            switch result {
+            case .success(let categories):
+                self.categories = categories.categories
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()    
                 }
-            }    
-        }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
+            }
+        } 
     }
     
     

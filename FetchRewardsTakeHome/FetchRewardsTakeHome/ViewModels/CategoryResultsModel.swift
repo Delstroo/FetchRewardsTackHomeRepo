@@ -19,34 +19,6 @@ class CategoryCollectionViewModel {
         let components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
 
         guard let finalURL = components?.url else { return completion(.failure(.invalidURL)) }
-        print(finalURL)
-
-        URLSession.shared.dataTask(with: finalURL) { data, response, error in
-            if let error = error {
-                return completion(.failure(.throwError(error)))
-            }
-
-            if let response = response as? HTTPURLResponse {
-                if response.statusCode != 200 {
-                    print("STATUS CODE: \(response.statusCode)")
-                }
-
-                guard let data = data else { return completion(.failure(.noData)) }
-
-                do {
-                    let topLevelObject = try JSONDecoder().decode(CategoryResults.self, from: data)
-
-                    var arrayOfMeals: [Category] = []
-                    for strCategory in topLevelObject.categories {
-                        arrayOfMeals.append(strCategory)
-                    }
-                    completion(.success(arrayOfMeals))
-                } catch {
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.throwError(error)))
-                }
-            }
-        }.resume()
     }
 
     static func fetchCategoryImages(

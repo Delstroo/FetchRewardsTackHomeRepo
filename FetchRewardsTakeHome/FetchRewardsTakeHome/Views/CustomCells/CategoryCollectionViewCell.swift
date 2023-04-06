@@ -128,19 +128,27 @@ class CategoryCell: UICollectionViewCell {
         guard let category = category else { return }
         categoryTitle.text = category.name
         categoryDescription.text = category.description
-        
-        CategoryCollectionViewModel.fetchCategoryImages(strCategoryThumb: category.thumbnail) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(thumbnail):
-                    self.categoryImageView.image = thumbnail
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                    self.categoryImageView.image = UIImage(named: "defaultImage")
+                
+        // Load image from URL
+        let imageUrl = URL(string: category.thumbnail)!
+        // Create an instance of ImageCache or use the shared singleton instance
+        let imageCache = ImageCache.shared
+
+        // Check if the image is already cached
+        ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
+            if let downloadedImage = image {
+                if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
+                    if downloadedImage.isEqual(cachedImage) {
+                        self.categoryImageView.image = cachedImage
+                    } else {
+                        self.categoryImageView.image = image
+                    }
+                } else {
+                    print("Image is not cached.")
                 }
+            } else {
+                print("Failed to download image.")
             }
         }
     }
 }
-
-

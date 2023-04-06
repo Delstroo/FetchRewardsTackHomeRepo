@@ -159,15 +159,25 @@ class MealsCollectionViewCell: UICollectionViewCell {
         guard let mealSearchResult = mealSearchResult else { return }
         mealNameLabel.text = mealSearchResult.name
         if mealSearchResult.thumbnail != nil {
-            MealsCollectionViewModel.fetchMealImages(strMeal: (URL(string: mealSearchResult.thumbnail!)!)) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case let .success(thumbnail):
-                        self.mealImageView.image = thumbnail
-                    case let .failure(error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                        self.mealImageView.image = UIImage(named: "")
+            // Load image from URL
+            let imageUrl = URL(string: mealSearchResult.thumbnail!)!
+            // Create an instance of ImageCache or use the shared singleton instance
+            let imageCache = ImageCache.shared
+
+            // Check if the image is already cached
+            ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
+                if let downloadedImage = image {
+                    if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
+                        if downloadedImage.isEqual(cachedImage) {
+                            self.mealImageView.image = cachedImage
+                        } else {
+                            self.mealImageView.image = image
+                        }
+                    } else {
+                        print("Image is not cached.")
                     }
+                } else {
+                    print("Failed to download image.")
                 }
             }
         } else {
