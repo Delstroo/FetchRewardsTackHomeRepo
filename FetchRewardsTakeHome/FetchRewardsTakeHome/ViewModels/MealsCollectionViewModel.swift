@@ -83,6 +83,7 @@ class MealsCollectionViewModel {
         guard let finalURL = components?.url else { return
             completion(.failure(.invalidURL))
         }
+        print(finalURL)
 
         URLSession.shared.dataTask(with: finalURL) { data, response, error in
             if let error = error {

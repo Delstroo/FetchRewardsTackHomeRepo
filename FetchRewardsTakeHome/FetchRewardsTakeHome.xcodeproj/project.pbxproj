@@ -14,8 +14,6 @@
 		825DBBFE29DDD1A900BF5447 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 825DBBFC29DDD1A900BF5447 /* LaunchScreen.storyboard */; };
 		825DBC0C29DDD26C00BF5447 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC0B29DDD26C00BF5447 /* ErrorHandler.swift */; };
 		825DBC0E29DDD28500BF5447 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC0D29DDD28500BF5447 /* ViewExtension.swift */; };
-		825DBC1029DDD2C000BF5447 /* MealsCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC0F29DDD2C000BF5447 /* MealsCollectionViewModel.swift */; };
-		825DBC1229DDD2D300BF5447 /* CategoryResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1129DDD2D300BF5447 /* CategoryResultsModel.swift */; };
 		825DBC1429DDD2F300BF5447 /* CategpryResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1329DDD2F300BF5447 /* CategpryResultsModel.swift */; };
 		825DBC1629DDD30500BF5447 /* MealSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1529DDD30500BF5447 /* MealSearchModel.swift */; };
 		825DBC1829DDD31A00BF5447 /* MealResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1729DDD31A00BF5447 /* MealResponseModel.swift */; };
@@ -40,8 +38,6 @@
 		825DBBFF29DDD1A900BF5447 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		825DBC0B29DDD26C00BF5447 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		825DBC0D29DDD28500BF5447 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
-		825DBC0F29DDD2C000BF5447 /* MealsCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealsCollectionViewModel.swift; sourceTree = "<group>"; };
-		825DBC1129DDD2D300BF5447 /* CategoryResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryResultsModel.swift; sourceTree = "<group>"; };
 		825DBC1329DDD2F300BF5447 /* CategpryResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategpryResultsModel.swift; sourceTree = "<group>"; };
 		825DBC1529DDD30500BF5447 /* MealSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealSearchModel.swift; sourceTree = "<group>"; };
 		825DBC1729DDD31A00BF5447 /* MealResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealResponseModel.swift; sourceTree = "<group>"; };
@@ -89,7 +85,6 @@
 				828BEE4D29DE184D003D4A5E /* NetworkLayer */,
 				825DBC0A29DDD24800BF5447 /* ExtensionsAndHelpers */,
 				825DBC0929DDD24100BF5447 /* Models */,
-				825DBC0829DDD23400BF5447 /* ViewModels */,
 				825DBC0729DDD22100BF5447 /* Views */,
 				825DBC0629DDD1FA00BF5447 /* Resources */,
 				825DBC0529DDD1E800BF5447 /* Storyboards */,
@@ -127,15 +122,6 @@
 				825DBC2429DDDBED00BF5447 /* SpinnerView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		825DBC0829DDD23400BF5447 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				825DBC0F29DDD2C000BF5447 /* MealsCollectionViewModel.swift */,
-				825DBC1129DDD2D300BF5447 /* CategoryResultsModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		825DBC0929DDD24100BF5447 /* Models */ = {
@@ -249,7 +235,6 @@
 			files = (
 				825DBC1A29DDD39500BF5447 /* CategoryCollectionViewController.swift in Sources */,
 				825DBC2529DDDBED00BF5447 /* SpinnerView.swift in Sources */,
-				825DBC1029DDD2C000BF5447 /* MealsCollectionViewModel.swift in Sources */,
 				825DBC0C29DDD26C00BF5447 /* ErrorHandler.swift in Sources */,
 				82793B9429DDEBA000B31422 /* StringExtension.swift in Sources */,
 				825DBBF229DDD1A900BF5447 /* AppDelegate.swift in Sources */,
@@ -263,7 +248,6 @@
 				825DBC1829DDD31A00BF5447 /* MealResponseModel.swift in Sources */,
 				825DBC2129DDD40000BF5447 /* MealsCollectionViewCell.swift in Sources */,
 				825DBC1D29DDD3CE00BF5447 /* CategoryCollectionViewCell.swift in Sources */,
-				825DBC1229DDD2D300BF5447 /* CategoryResultsModel.swift in Sources */,
 				825DBC1429DDD2F300BF5447 /* CategpryResultsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

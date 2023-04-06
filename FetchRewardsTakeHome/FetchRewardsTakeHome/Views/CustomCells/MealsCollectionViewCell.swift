@@ -32,8 +32,8 @@ class MealsCollectionViewCell: UICollectionViewCell {
     var idString: String?
     
     override func awakeFromNib() {
-          super.awakeFromNib()
-              
+        super.awakeFromNib()
+        
         // Apply rounded corners to contentView
         contentView.layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
         contentView.layer.masksToBounds = true
@@ -42,22 +42,22 @@ class MealsCollectionViewCell: UICollectionViewCell {
         // from being clipped to the corner radius
         layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
         layer.masksToBounds = false
-          
-          // Apply a shadow
+        
+        // Apply a shadow
         layer.shadowRadius = 8.0
         layer.shadowOpacity = 0.12
         layer.shadowColor = UIColor.label.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
-      }
-      
-      override func layoutSubviews() {
-          super.layoutSubviews()
-          
-          layer.shadowPath = UIBezierPath(
-              roundedRect: bounds,
-              cornerRadius: MealCollectionViewUX.generalCornerRadius
-          ).cgPath
-      }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layer.shadowPath = UIBezierPath(
+            roundedRect: bounds,
+            cornerRadius: MealCollectionViewUX.generalCornerRadius
+        ).cgPath
+    }
     
     let cellBackgroundView: UIView = .build { view in
         view.clipsToBounds = true
@@ -140,31 +140,31 @@ class MealsCollectionViewCell: UICollectionViewCell {
     
     func fetchIngredients() {
         guard let mealSearchResult = mealSearchResult else { return }
+        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(mealSearchResult.id)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
 
-        MealsCollectionViewModel.fetchMealIngredients(mealID: mealSearchResult.id) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(meal):
-                    self.meal = meal
-                    self.mealTypeLabel.text = "Type: \(meal.area)"
-                    self.mealIngredientCountLabel.text = "Number of Ingredients: \(meal.ingredients.count)"
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
+        NetworkAgent().fetch(request) { (result: Result<MealResponse, ErrorHandler>) in
+            switch result {
+            case .success(let meal):
+                DispatchQueue.main.async {
+                    self.meal = meal.meals.first
+                    self.mealTypeLabel.text = "Type: \(meal.meals[0].area)"
+                    self.mealIngredientCountLabel.text = "Number of Ingredients: \(meal.meals[0].ingredients.count)"
+                    self.updateViews()
                 }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        }
+        } 
     }
     
     func updateViews() {
         guard let mealSearchResult = mealSearchResult else { return }
         mealNameLabel.text = mealSearchResult.name
         if mealSearchResult.thumbnail != nil {
-            // Load image from URL
             let imageUrl = URL(string: mealSearchResult.thumbnail!)!
-            // Create an instance of ImageCache or use the shared singleton instance
-            let imageCache = ImageCache.shared
 
-            // Check if the image is already cached
             ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
                 if let downloadedImage = image {
                     if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {

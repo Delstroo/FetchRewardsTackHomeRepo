@@ -7,16 +7,16 @@
 
 import Foundation
 
-struct MealResponse: Decodable {
+struct MealResponse: Codable {
     let meals: [Meal]
 }
 
-struct Ingredients: Decodable {
+struct Ingredients: Codable {
     let name: String
     let measurement: String
 }
 
-struct Meal: Decodable {
+struct Meal: Codable {
     let id: String
     let name: String
     let category: String

@@ -89,17 +89,21 @@ class MealInstructionsViewController: UIViewController {
     
     func fetchAllIngredients() {
         guard let mealSearchResult = mealSearchResult else { return }
-        MealsCollectionViewModel.fetchMealIngredients(mealID: mealSearchResult.id) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(meal):
-                    self.meal = meal
+        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(mealSearchResult.id)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        NetworkAgent().fetch(request) { (result: Result<MealResponse, ErrorHandler>) in
+            switch result {
+            case .success(let meal):
+                DispatchQueue.main.async {
+                    self.meal = meal.meals[0]
                     self.updateViews()
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
                 }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        }
+        } 
     }
     
     func showSpinner() {
@@ -166,13 +170,24 @@ class MealInstructionsViewController: UIViewController {
         if youtubeButton.isHidden && sourceLinkButton.isHidden {
             helpLabel.isHidden = true
         }
-        MealsCollectionViewModel.fetchMealImages(strMeal: meal.thumbnailURL!) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(mealImage):
-                    self.mealImageView.image = mealImage
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
+    }
+    
+    func fetchImage() {
+        guard let meal = meal else { return }
+        if let imageUrl = meal.thumbnailURL {
+            ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
+                if let downloadedImage = image {
+                    if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
+                        if downloadedImage.isEqual(cachedImage) {
+                            self.mealImageView.image = cachedImage
+                        } else {
+                            self.mealImageView.image = image
+                        }
+                    } else {
+                        print("Image is not cached.")
+                    }
+                } else {
+                    print("Failed to download image.")
                 }
             }
         }
