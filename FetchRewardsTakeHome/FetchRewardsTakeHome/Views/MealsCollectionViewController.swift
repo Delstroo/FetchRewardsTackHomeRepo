@@ -29,10 +29,10 @@ class MealsCollectionViewController: UICollectionViewController {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
-        NetworkAgent().fetch(request) { (result: Result<MealSearchResponse, ErrorHandler>) in
+        NetworkAgent().fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
             switch result {
             case .success(let mealResponse):
-                self.mealSearhResults = mealResponse.meals
+                self.mealSearhResults = mealResponse.meals.sorted(by: { $0.name < $1.name })
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()    
                 }

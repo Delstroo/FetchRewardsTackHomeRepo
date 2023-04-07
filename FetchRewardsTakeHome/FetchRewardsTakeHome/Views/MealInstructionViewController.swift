@@ -93,7 +93,7 @@ class MealInstructionsViewController: UIViewController {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
-        NetworkAgent().fetch(request) { (result: Result<MealResponse, ErrorHandler>) in
+        NetworkAgent().fetch(request) { (result: Result<MealResponse, NetworkError>) in
             switch result {
             case .success(let meal):
                 DispatchQueue.main.async {
@@ -146,12 +146,13 @@ class MealInstructionsViewController: UIViewController {
 
     func updateViews() {
         guard let meal = meal else { return }
+        fetchImage()
         instructionsLabel.lineBreakMode = .byWordWrapping
         youtubeButton.setImage(UIImage(named: "playButton"), for: .normal)
         sourceLinkButton.setImage(UIImage(named: "webButton"), for: .normal)
         for ingredient in meal.ingredients {
             if ingredient.measurement != "" {
-                strings.append("⊛ \(ingredient.name), \(ingredient.measurement)")
+                strings.append("⊛ \(ingredient.name) - \(ingredient.measurement)")
             }
         }
         mealImageView.clipsToBounds = true
@@ -173,21 +174,23 @@ class MealInstructionsViewController: UIViewController {
     }
     
     func fetchImage() {
-        guard let meal = meal else { return }
-        if let imageUrl = meal.thumbnailURL {
-            ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
-                if let downloadedImage = image {
-                    if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
-                        if downloadedImage.isEqual(cachedImage) {
-                            self.mealImageView.image = cachedImage
-                        } else {
-                            self.mealImageView.image = image
-                        }
-                    } else {
-                        print("Image is not cached.")
+        guard let meal = meal,
+              let thumbnail = meal.thumbnailURL else { return }
+        let urlRequest = URLRequest(url: thumbnail)
+        let cachedImage = ImageCache.shared.loadCachedImage(forKey: thumbnail)
+        
+        if cachedImage != nil {
+            self.mealImageView.image = cachedImage
+        } else {
+            NetworkAgent().fetchImage(urlRequest) { result in
+                switch result {
+                case .success(let image):
+                    DispatchQueue.main.async {
+                        self.mealImageView.image = image
                     }
-                } else {
-                    print("Failed to download image.")
+                    break
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
                 }
             }
         }

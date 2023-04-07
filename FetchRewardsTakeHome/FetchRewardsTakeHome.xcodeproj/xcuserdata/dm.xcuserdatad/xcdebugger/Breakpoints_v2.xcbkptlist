@@ -7,16 +7,96 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C32E3E6A-00DE-4889-AD82-AB95B5619C63"
+            uuid = "C8A20D10-70CD-4F61-8A70-5F2B5409D027"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FetchRewardsTakeHome/NetworkLayer/NetworkLayer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "fetchImage(_:cachePolicy:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "C8A20D10-70CD-4F61-8A70-5F2B5409D027 - 8f6f9f2e43156d9a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FetchRewardsTakeHome.NetworkAgent.fetchImage(_: Foundation.URLRequest, cachePolicy: __C.NSURLRequestCachePolicy, completion: (Swift.Result&lt;__C.UIImage, FetchRewardsTakeHome.NetworkError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "FetchRewardsTakeHome"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dm/Documents/You/FetchRewardsTackHomeRepo/FetchRewardsTakeHome/FetchRewardsTakeHome/NetworkLayer/NetworkLayer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "1456">
+               </Location>
+               <Location
+                  uuid = "C8A20D10-70CD-4F61-8A70-5F2B5409D027 - 8f6f9f2e43156d9a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in FetchRewardsTakeHome.NetworkAgent.fetchImage(_: Foundation.URLRequest, cachePolicy: __C.NSURLRequestCachePolicy, completion: (Swift.Result&lt;__C.UIImage, FetchRewardsTakeHome.NetworkError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "FetchRewardsTakeHome"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/dm/Documents/You/FetchRewardsTackHomeRepo/FetchRewardsTakeHome/FetchRewardsTakeHome/NetworkLayer/NetworkLayer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "1528">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0A1910A1-E3C0-4CDA-8A6E-DCC598DA2E3F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FetchRewardsTakeHome/Views/CustomCells/MealsCollectionViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
-            landmarkName = "updateViews()"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "fetchImages()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5AE169CB-ED82-499B-951C-41E1D7BA9435"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FetchRewardsTakeHome/Views/MealInstructionViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
+            landmarkName = "fetchImage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7FE5EF80-FDBD-4670-9CF1-51FD5AAD5552"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FetchRewardsTakeHome/Views/CustomCells/CategoryCollectionViewCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "fetchImages()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

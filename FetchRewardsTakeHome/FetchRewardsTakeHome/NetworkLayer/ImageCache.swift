@@ -11,31 +11,15 @@ import UIKit
 class ImageCache {
     static let shared = ImageCache()
 
-    let cache = NSCache<NSString, UIImage>()
+    let cache = NSCache<NSURL, UIImage>()
 
-    init() {}
+    private init() {}
 
-    func setImage(_ image: UIImage, forKey key: String) {
-        cache.setObject(image, forKey: key as NSString)
+    func setImage(_ image: UIImage, forKey key: URL) {
+        cache.setObject(image, forKey: key as NSURL)
     }
 
-    func loadCachedImage(forKey key: String) -> UIImage? {
-        return cache.object(forKey: key as NSString)
-    }
-
-    func loadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            if let data = data, let image = UIImage(data: data) {
-                self?.setImage(image, forKey: url.absoluteString)
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-            }
-        }
-        task.resume()
+    func loadCachedImage(forKey key: URL) -> UIImage? {
+        return cache.object(forKey: key as NSURL)
     }
 }

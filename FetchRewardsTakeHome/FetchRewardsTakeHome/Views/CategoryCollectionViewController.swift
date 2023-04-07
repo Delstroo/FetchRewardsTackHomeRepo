@@ -35,10 +35,11 @@ class CategoryCollectionViewController: UICollectionViewController {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
-        NetworkAgent().fetch(request) { (result: Result<CategoryResults, ErrorHandler>) in
+        NetworkAgent().fetch(request) { (result: Result<CategoryResults, NetworkError>) in
             switch result {
             case .success(let categories):
-                self.categories = categories.categories
+                self.categories = categories.categories.sorted(by: { $0.name < $1.name })
+
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()    
                 }

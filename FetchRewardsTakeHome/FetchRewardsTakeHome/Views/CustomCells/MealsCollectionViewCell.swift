@@ -143,8 +143,8 @@ class MealsCollectionViewCell: UICollectionViewCell {
         let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(mealSearchResult.id)")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
-        NetworkAgent().fetch(request) { (result: Result<MealResponse, ErrorHandler>) in
+        
+        NetworkAgent().fetch(request) { (result: Result<MealResponse, NetworkError>) in
             switch result {
             case .success(let meal):
                 DispatchQueue.main.async {
@@ -162,26 +162,31 @@ class MealsCollectionViewCell: UICollectionViewCell {
     func updateViews() {
         guard let mealSearchResult = mealSearchResult else { return }
         mealNameLabel.text = mealSearchResult.name
-        if mealSearchResult.thumbnail != nil {
-            let imageUrl = URL(string: mealSearchResult.thumbnail!)!
-
-            ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
-                if let downloadedImage = image {
-                    if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
-                        if downloadedImage.isEqual(cachedImage) {
-                            self.mealImageView.image = cachedImage
-                        } else {
-                            self.mealImageView.image = image
-                        }
-                    } else {
-                        print("Image is not cached.")
+        fetchImages()
+    }
+    
+    func fetchImages() {
+        guard let mealSearchResult = mealSearchResult, 
+              let thumbnail = mealSearchResult.thumbnail,
+              let imageUrl = URL(string: thumbnail) else { return }
+        let urlRequest = URLRequest(url: imageUrl)
+        let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
+        
+        if cachedImage != nil {
+            self.mealImageView.image = cachedImage
+        } else {
+            // Call fetchImage function with the URLRequest and a completion handler
+            NetworkAgent().fetchImage(urlRequest) { result in
+                switch result {
+                case .success(let image):
+                    DispatchQueue.main.async {
+                        self.mealImageView.image = image
                     }
-                } else {
-                    print("Failed to download image.")
+                    break
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
                 }
             }
-        } else {
-            mealImageView.image = UIImage(named: "defaultImage")
         }
     }
 }

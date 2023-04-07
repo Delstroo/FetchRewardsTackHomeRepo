@@ -21,8 +21,7 @@ private struct CategoryCellUX {
 
 }
 
-class CategoryCell: UICollectionViewCell {
-    
+class CategoryCell: UICollectionViewCell, ReusableCell {
     var category: Category? {
         didSet {
             updateViews()
@@ -128,26 +127,30 @@ class CategoryCell: UICollectionViewCell {
         guard let category = category else { return }
         categoryTitle.text = category.name
         categoryDescription.text = category.description
-                
-        // Load image from URL
-        let imageUrl = URL(string: category.thumbnail)!
-        // Create an instance of ImageCache or use the shared singleton instance
-        let imageCache = ImageCache.shared
-
-        // Check if the image is already cached
-        ImageCache.shared.loadImage(from: imageUrl) { (image: UIImage?) in
-            if let downloadedImage = image {
-                if let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl.absoluteString) {
-                    if downloadedImage.isEqual(cachedImage) {
-                        self.categoryImageView.image = cachedImage
-                    } else {
+        fetchImages()
+    }
+    
+    func fetchImages() {
+    
+        guard let category = category,
+              let imageUrl = URL(string: category.thumbnail) else { return }
+        let urlRequest = URLRequest(url: imageUrl)
+        let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
+        
+        if cachedImage != nil {
+            self.categoryImageView.image = cachedImage
+        } else {
+            // Call fetchImage function with the URLRequest and a completion handler
+            NetworkAgent().fetchImage(urlRequest) { result in
+                switch result {
+                case .success(let image):
+                    DispatchQueue.main.async {
                         self.categoryImageView.image = image
                     }
-                } else {
-                    print("Image is not cached.")
+                    break
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
                 }
-            } else {
-                print("Failed to download image.")
             }
         }
     }
