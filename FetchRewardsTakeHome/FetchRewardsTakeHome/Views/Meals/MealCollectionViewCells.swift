@@ -1,13 +1,13 @@
 //
-//  MealsCollectionViewCell.swift
+//  MealCollectionViewCell.swift
 //  FetchRewardsTakeHome
 //
-//  Created by Delstun McCray on 4/5/23.
+//  Created by Delstun McCray on 4/7/23.
 //
 
 import UIKit
 
-private struct MealCollectionViewUX {
+private struct CollectionViewUX {
     static let generalCornerRadius: CGFloat = 12
     static let titleMaxFontSize: CGFloat = 12
     static let newsDescriptionMaxFontSize: CGFloat = 16
@@ -20,7 +20,7 @@ private struct MealCollectionViewUX {
     static let rightInset: CGFloat = 7.0
 }
 
-class MealsCollectionViewCell: UICollectionViewCell {
+class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
     
     var mealSearchResult: MealSearchResult? {
         didSet {
@@ -35,12 +35,12 @@ class MealsCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         
         // Apply rounded corners to contentView
-        contentView.layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
+        contentView.layer.cornerRadius = CollectionViewUX.generalCornerRadius
         contentView.layer.masksToBounds = true
         
         // Set masks to bounds to false to avoid the shadow
         // from being clipped to the corner radius
-        layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
+        layer.cornerRadius = CollectionViewUX.generalCornerRadius
         layer.masksToBounds = false
         
         // Apply a shadow
@@ -55,17 +55,23 @@ class MealsCollectionViewCell: UICollectionViewCell {
         
         layer.shadowPath = UIBezierPath(
             roundedRect: bounds,
-            cornerRadius: MealCollectionViewUX.generalCornerRadius
+            cornerRadius: CollectionViewUX.generalCornerRadius
         ).cgPath
     }
     
     let cellBackgroundView: UIView = .build { view in
         view.clipsToBounds = true
         view.layer.masksToBounds = true
-        view.layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
+        view.layer.cornerRadius = CollectionViewUX.generalCornerRadius
         view.backgroundColor = .systemBackground
         view.layer.borderColor = UIColor.secondarySystemBackground.withAlphaComponent(0.15).cgColor
         view.layer.borderWidth = 1.0
+        view.layer.cornerRadius = CollectionViewUX.generalCornerRadius
+        view.layer.masksToBounds = false
+        view.layer.shadowRadius = 8.0
+        view.layer.shadowOpacity = 0.12
+        view.layer.shadowColor = UIColor.label.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
     }
     
     lazy var mealImageView: UIImageView = .build { imageView in 
@@ -104,13 +110,13 @@ class MealsCollectionViewCell: UICollectionViewCell {
     }
     
     func setupLayout() {
-        contentView.layer.cornerRadius = MealCollectionViewUX.generalCornerRadius
-        contentView.layer.shadowRadius = MealCollectionViewUX.newsCellShadowRadius
-        contentView.layer.shadowOffset = CGSize(width: 0, height: MealCollectionViewUX.newsCellShadowOffset)
+        contentView.layer.cornerRadius = CollectionViewUX.generalCornerRadius
+        contentView.layer.shadowRadius = CollectionViewUX.newsCellShadowRadius
+        contentView.layer.shadowOffset = CGSize(width: 0, height: CollectionViewUX.newsCellShadowOffset)
         contentView.layer.shadowColor = UIColor.label.cgColor
         contentView.layer.shadowOpacity = 0.2
         
-        let imageHeight = CGFloat(contentView.frame.height * 0.65)
+        let imageHeight = CGFloat(contentView.frame.height * 0.60)
         
         contentView.addSubviews(cellBackgroundView, mealNameLabel, mealImageView, mealIngredientCountLabel, mealTypeLabel)
         NSLayoutConstraint.activate([
@@ -190,4 +196,3 @@ class MealsCollectionViewCell: UICollectionViewCell {
         }
     }
 }
-

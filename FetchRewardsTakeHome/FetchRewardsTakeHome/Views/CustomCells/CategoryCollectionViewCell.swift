@@ -21,8 +21,7 @@ private struct CategoryCellUX {
 
 }
 
-class CategoryCell: UICollectionViewCell {
-    
+class CategoryCell: UICollectionViewCell, ReusableCell {
     var category: Category? {
         didSet {
             updateViews()
@@ -128,19 +127,31 @@ class CategoryCell: UICollectionViewCell {
         guard let category = category else { return }
         categoryTitle.text = category.name
         categoryDescription.text = category.description
+        fetchImages()
+    }
+    
+    func fetchImages() {
+    
+        guard let category = category,
+              let imageUrl = URL(string: category.thumbnail) else { return }
+        let urlRequest = URLRequest(url: imageUrl)
+        let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
         
-        CategoryCollectionViewModel.fetchCategoryImages(strCategoryThumb: category.thumbnail) { result in
-            DispatchQueue.main.async {
+        if cachedImage != nil {
+            self.categoryImageView.image = cachedImage
+        } else {
+            // Call fetchImage function with the URLRequest and a completion handler
+            NetworkAgent().fetchImage(urlRequest) { result in
                 switch result {
-                case let .success(thumbnail):
-                    self.categoryImageView.image = thumbnail
-                case let .failure(error):
+                case .success(let image):
+                    DispatchQueue.main.async {
+                        self.categoryImageView.image = image
+                    }
+                    break
+                case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                    self.categoryImageView.image = UIImage(named: "defaultImage")
                 }
             }
         }
     }
 }
-
-

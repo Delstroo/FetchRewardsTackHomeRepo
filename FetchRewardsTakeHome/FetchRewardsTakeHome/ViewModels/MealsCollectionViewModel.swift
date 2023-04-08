@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 class MealsCollectionViewModel {
+    
     static let cache = NSCache<NSString, UIImage>()
 
     static var mealBaseURL = "https://www.themealdb.com/api/json/v1/1/filter.php"
@@ -82,6 +83,7 @@ class MealsCollectionViewModel {
         guard let finalURL = components?.url else { return
             completion(.failure(.invalidURL))
         }
+        print(finalURL)
 
         URLSession.shared.dataTask(with: finalURL) { data, response, error in
             if let error = error {

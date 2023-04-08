@@ -25,17 +25,21 @@ class MealsCollectionViewController: UICollectionViewController {
     
     func fetchMeals() {
         guard let category = category else { return }
-        MealsCollectionViewModel.fetchMealList(idMeal: category.name) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(meals):
-                    self.mealSearhResults = meals
-                    self.collectionView.reloadData()
-                case let .failure(error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
+        let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=\(category.name)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        NetworkAgent().fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
+            switch result {
+            case .success(let mealResponse):
+                self.mealSearhResults = mealResponse.meals.sorted(by: { $0.name < $1.name })
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()    
                 }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        }
+        } 
     }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
