@@ -10,61 +10,66 @@ import UIKit
 
 struct NetworkAgent {
     func fetch<T: Codable>(_ request: URLRequest, completion: @escaping (Result<T, NetworkError>) -> Void) {
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(NetworkError.throwError(error)))
+        // First, check if the response is already available in the cache
+            if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
+                do {
+                    let decoder = JSONDecoder()
+                    let response = try decoder.decode(T.self, from: cachedResponse.data)
+                    completion(.success(response))
+                } catch {
+                    completion(.failure(NetworkError.throwError(error)))
+                }
                 return
             }
             
-            guard let data = data, !data.isEmpty else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                _ = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
-                completion(.failure(NetworkError.throwError(error!)))
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                let response = try decoder.decode(T.self, from: data)
-                completion(.success(response))
-            } catch {
-                completion(.failure(NetworkError.throwError(error)))
-                return
-            }
-        }.resume()
-    }
+            // If not available in cache, then make a network request
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(generateNetworkError(from: error)))
+                    return
+                }
+                
+                guard let data = data, !data.isEmpty,
+                      let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    completion(.failure(NetworkError.noData))
+                    return
+                }
+                
+                // Cache the received JSON data
+                if let httpResponse = response {
+                    let cachedResponse = CachedURLResponse(response: httpResponse, data: data)
+                    URLCache.shared.storeCachedResponse(cachedResponse, for: request)
+                }
+                
+                do {
+                    let decoder = JSONDecoder()
+                    let response = try decoder.decode(T.self, from: data)
+                    completion(.success(response))
+                } catch {
+                    completion(.failure(NetworkError.throwError(error)))
+                }
+            }.resume()
+        }
     
     func fetchImage(_ request: URLRequest, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<UIImage, NetworkError>) -> Void) {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                completion(.failure(NetworkError.throwError(error)))
+                completion(.failure(generateNetworkError(from: error)))
                 return
             }
             
-            guard let data = data, !data.isEmpty else {
+            guard let data = data, !data.isEmpty,
+                  let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                return
+            }
+            
+            guard response is HTTPURLResponse else {
                 completion(.failure(NetworkError.noData))
                 return
             }
             
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                _ = HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode)
-                completion(.failure(NetworkError.throwError(error!)))
-                return
-            }
             if let image = UIImage(data: data) {
                 guard let url = request.url else { return }
                 ImageCache.shared.setImage(image, forKey: url)
@@ -73,5 +78,16 @@ struct NetworkAgent {
                 completion(.failure(.noData))
             }
         }.resume()
+    }
+    
+    private func generateNetworkError(from error: Error?) -> NetworkError {
+        if let error = error {
+            if let urlError = error as? URLError {
+                return NetworkError.throwError(urlError)
+            } else if let decodingError = error as? DecodingError {
+                return NetworkError.unableToDecode(decodingError)
+            }
+        }
+        return NetworkError.noData
     }
 }

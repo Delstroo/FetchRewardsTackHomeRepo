@@ -42,6 +42,7 @@ class InstrucationViewController: UIViewController {
     
     private lazy var nameDividerView: UIView = .build { view in 
         view.backgroundColor = .label.withAlphaComponent(0.15)
+        view.alpha = 0.0
     }
     
     private lazy var ingredientsHeaderLabel: UILabel = .build { label in
@@ -50,6 +51,7 @@ class InstrucationViewController: UIViewController {
         label.text = "Ingredients:"
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .label
+        label.alpha = 0.0
     }
     
     private lazy var ingredientsLabel: UILabel = .build { label in
@@ -65,6 +67,7 @@ class InstrucationViewController: UIViewController {
         label.text = "Instructions:"
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .label
+        label.alpha = 0.0
     }
     
     private lazy var instructionsLabel: UILabel = .build { label in
@@ -80,6 +83,20 @@ class InstrucationViewController: UIViewController {
         label.text = "Need some help? Try some of our sources!"
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .label
+        label.textAlignment = .center
+        label.alpha = 0.0
+    }
+    
+    private lazy var mediaButton: UIButton = .build { button in 
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "playButton"), for: .normal)
+        button.addTarget(self, action: #selector(self.mediaButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var webButton: UIButton = .build { button in 
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "webButton"), for: .normal)
+        button.addTarget(self, action: #selector(self.webButtonTapped), for: .touchUpInside)
     }
         
     // MARK: - Life Cycle Methods
@@ -134,7 +151,7 @@ class InstrucationViewController: UIViewController {
         }
         let imageHeight = CGFloat(screenHeight * 0.46)
         scrollView.contentSize = contentView.bounds.size
-        contentView.addSubviews(mealImageView, mealNameLabel, nameDividerView, ingredientsHeaderLabel, ingredientsLabel, instructionsHeaderLabel, instructionsLabel)
+        contentView.addSubviews(mealImageView, mealNameLabel, nameDividerView, ingredientsHeaderLabel, ingredientsLabel, instructionsHeaderLabel, instructionsLabel, needSomeHelplabel, mediaButton, webButton)
         NSLayoutConstraint.activate([
             mealImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -8),
             mealImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
@@ -150,7 +167,7 @@ class InstrucationViewController: UIViewController {
             nameDividerView.heightAnchor.constraint(equalToConstant: 3),
             nameDividerView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
             
-            ingredientsHeaderLabel.topAnchor.constraint(equalTo: nameDividerView.bottomAnchor, constant: 12),
+            ingredientsHeaderLabel.topAnchor.constraint(equalTo: nameDividerView.bottomAnchor, constant: 40),
             ingredientsHeaderLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             ingredientsHeaderLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
             
@@ -158,14 +175,29 @@ class InstrucationViewController: UIViewController {
             ingredientsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             ingredientsLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
             
-            instructionsHeaderLabel.topAnchor.constraint(equalTo:ingredientsLabel.bottomAnchor, constant: 12),
+            instructionsHeaderLabel.topAnchor.constraint(equalTo:ingredientsLabel.bottomAnchor, constant: 40),
             instructionsHeaderLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             instructionsHeaderLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
             
             instructionsLabel.topAnchor.constraint(equalTo: instructionsHeaderLabel.bottomAnchor, constant: 8),
             instructionsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             instructionsLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
-            instructionsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            
+            needSomeHelplabel.topAnchor.constraint(equalTo: instructionsLabel.bottomAnchor, constant: 40),
+            needSomeHelplabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            needSomeHelplabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
+            
+            mediaButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12),
+            mediaButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            mediaButton.widthAnchor.constraint(equalToConstant: 50),
+            mediaButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor),
+            mediaButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            
+            webButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12),
+            webButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
+            webButton.widthAnchor.constraint(equalToConstant: 50),
+            webButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor),
+            webButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
     
@@ -189,6 +221,16 @@ class InstrucationViewController: UIViewController {
         } 
     }
     
+    @objc func mediaButtonTapped() {
+        guard let meal = meal else { return }
+        UIApplication.shared.open(meal.mediaUrl!)
+    }
+    
+    @objc func webButtonTapped() {
+        guard let meal = meal else { return }
+        UIApplication.shared.open(meal.sourceURL!)
+    }
+    
     func updateViews() {
         guard let meal = meal else { return }
         self.instructionsLabel.text = meal.instructions
@@ -199,7 +241,30 @@ class InstrucationViewController: UIViewController {
             }
         }
         ingredientsLabel.text = strings.joined(separator: "\n")
+        shouldShowButtons(meal: meal)
+        showLabels()
         fetchImage()
+    }
+    
+    func showLabels() {
+        self.nameDividerView.alpha = 1.0
+        self.ingredientsHeaderLabel.alpha = 1.0
+        self.instructionsHeaderLabel.alpha = 1.0
+        self.needSomeHelplabel.alpha = 1.0
+    }
+    
+    func shouldShowButtons(meal: Meal) {
+        if meal.mediaUrl == nil || meal.mediaUrl == URL(string: "") {
+            mediaButton.isHidden = true
+        }
+        
+        if meal.sourceURL == nil || meal.sourceURL == URL(string: "") {
+            webButton.isHidden = true
+        }
+        
+        if webButton.isHidden && mediaButton.isHidden {
+            needSomeHelplabel.isHidden = true
+        }
     }
     
     func fetchImage() {

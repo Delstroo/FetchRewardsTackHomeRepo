@@ -80,6 +80,7 @@ class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
         imageView.layer.masksToBounds = true
         imageView.backgroundColor = .clear
         imageView.backgroundColor = .secondarySystemBackground
+        imageView.layer.cornerRadius = 10
     }
     
     lazy var mealNameLabel: UILabel = .build { label in
@@ -116,7 +117,7 @@ class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
         contentView.layer.shadowColor = UIColor.label.cgColor
         contentView.layer.shadowOpacity = 0.2
         
-        let imageHeight = CGFloat(contentView.frame.height * 0.60)
+        let imageHeight = CGFloat(contentView.frame.height * 0.42)
         
         contentView.addSubviews(cellBackgroundView, mealNameLabel, mealImageView, mealIngredientCountLabel, mealTypeLabel)
         NSLayoutConstraint.activate([

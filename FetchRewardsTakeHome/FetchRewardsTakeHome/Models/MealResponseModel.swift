@@ -23,7 +23,7 @@ struct Meal: Codable {
     let area: String
     let instructions: String
     let thumbnailURL: URL?
-    let youtubeURL: URL?
+    let mediaUrl: URL?
     let sourceURL: URL?
     let ingredients: [Ingredients]
 
@@ -59,7 +59,7 @@ struct Meal: Codable {
         area = try container.decode(String.self, forKey: .area)
         instructions = try container.decode(String.self, forKey: .instructions)
         thumbnailURL = try? container.decode(URL.self, forKey: .thumbnailURL)
-        youtubeURL = try? container.decodeIfPresent(URL.self, forKey: .youtubeURL)
+        mediaUrl = try? container.decodeIfPresent(URL.self, forKey: .youtubeURL)
         sourceURL = try? container.decodeIfPresent(URL.self, forKey: .sourceURL)
 
         let dynamic = try decoder.container(keyedBy: DynamicCodingKey.self)

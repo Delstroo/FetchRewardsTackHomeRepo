@@ -11,7 +11,7 @@ enum NetworkError: LocalizedError {
     case invalidURL
     case throwError(Error)
     case noData
-    case unableToDecode
+    case unableToDecode(Error)
 
     var errorDescription: String {
         switch self {
