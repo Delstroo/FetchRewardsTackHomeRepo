@@ -50,9 +50,9 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func fetchCategories() {
-        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/categories.php")!
+        let url = URL.categoryURL
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
         
         NetworkAgent().fetch(request) { (result: Result<CategoryResults, NetworkError>) in
             switch result {

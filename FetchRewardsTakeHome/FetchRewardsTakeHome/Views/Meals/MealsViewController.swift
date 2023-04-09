@@ -28,7 +28,7 @@ class MealsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: "MealCollectionCell")
+        collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: MealCollectionViewCell.cellIdentifier)
         setupCollectionView()
         fetchMeals()
         collectionView.delegate = self
@@ -60,9 +60,9 @@ class MealsViewController: UIViewController {
     
     // MARK: - Helper Funcs
     func fetchMeals() {
-        let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=\(category.name)")!
+        let url = URL.apiEndpoint(url: URL.mealListURL, query: "c", queryValue: category.name)
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
 
         NetworkAgent().fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
             switch result {
@@ -81,7 +81,7 @@ class MealsViewController: UIViewController {
 // MARK: - CollectionView Delegate and DataSource Extensions
 extension MealsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MealCollectionCell", for: indexPath) as? MealCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MealCollectionViewCell.cellIdentifier, for: indexPath) as? MealCollectionViewCell else { return UICollectionViewCell() }
         let mealSearchResult = mealSearchResults[indexPath.row]
         cell.setupLayout()
         cell.mealSearchResult = mealSearchResult

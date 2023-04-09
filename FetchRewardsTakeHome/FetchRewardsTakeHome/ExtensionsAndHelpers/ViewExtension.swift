@@ -15,14 +15,6 @@ extension UIView {
     /// set to false. Passing in an optional closure to do further configuration of the view.
     ///
     /// - Parameter builder: A function that takes the newly created view.
-    ///
-    /// Usage:
-    /// ```
-    ///    private let button: UIButton = .build { button in
-    ///        button.setTitle("Tap me!", for state: .normal)
-    ///        button.backgroundColor = .systemPink
-    ///    }
-    /// ```
     static func build<T: UIView>(_ builder: ((T) -> Void)? = nil) -> T {
         let view = T()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,11 +25,6 @@ extension UIView {
 
     /// Convenience function to add multiple subviews
     /// - Parameter views: A variadic parameter taking in a list of views to be added.
-    ///
-    /// Usage:
-    /// ```
-    ///    view.addSubviews(headerView, contentView, footerView)
-    /// ```
     func addSubviews(_ views: UIView...) {
         views.forEach(addSubview)
     }
@@ -61,5 +48,21 @@ extension UIScrollView {
     func fitSizeOfContent() {
         let sumHeight = self.subviews.map({$0.frame.size.height}).reduce(0, {x, y in x + y})
         self.contentSize = CGSize(width: self.frame.width, height: sumHeight)
+    }
+}
+
+extension UIImageView {
+    func setImage(withURL url: URL) {
+        let request = URLRequest(url: url)
+        NetworkAgent().fetchImage(request) { result in
+            switch result {
+            case .success(let image):
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            case .failure(let error):
+                print("Failed to download image: \(error)")
+            }
+        }
     }
 }

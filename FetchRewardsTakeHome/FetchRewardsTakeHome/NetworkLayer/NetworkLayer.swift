@@ -88,3 +88,11 @@ struct NetworkAgent {
         return NetworkError.noData
     }
 }
+
+public enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    // Add more cases for other HTTP methods as needed
+}

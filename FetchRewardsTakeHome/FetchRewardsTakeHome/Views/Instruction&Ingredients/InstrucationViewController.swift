@@ -104,8 +104,8 @@ class InstrucationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScrollView()
-        setupLayout()
         fetchAllIngredients()
+        setupLayout()
     }
     
     override func viewDidLayoutSubviews() {
@@ -181,31 +181,15 @@ class InstrucationViewController: UIViewController {
             instructionsLabel.topAnchor.constraint(equalTo: instructionsHeaderLabel.bottomAnchor, constant: 8),
             instructionsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             instructionsLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
-            
-            needSomeHelplabel.topAnchor.constraint(equalTo: instructionsLabel.bottomAnchor, constant: 40),
-            needSomeHelplabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            needSomeHelplabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20),
-            
-            mediaButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12),
-            mediaButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
-            mediaButton.widthAnchor.constraint(equalToConstant: 50),
-            mediaButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor),
-            mediaButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            
-            webButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12),
-            webButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
-            webButton.widthAnchor.constraint(equalToConstant: 50),
-            webButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor),
-            webButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
     
     // MARK: - Helper Functions
     
     func fetchAllIngredients() {
-        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(mealSearchResult.id)")!
+        let url = URL.apiEndpoint(url: URL.ingredientsURL, query: "i", queryValue: mealSearchResult.id)
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
 
         NetworkAgent().fetch(request) { (result: Result<MealResponse, NetworkError>) in
             switch result {
@@ -263,29 +247,35 @@ class InstrucationViewController: UIViewController {
         
         if webButton.isHidden && mediaButton.isHidden {
             needSomeHelplabel.isHidden = true
+            instructionsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
+        } else {
+            needSomeHelplabel.topAnchor.constraint(equalTo: instructionsLabel.bottomAnchor, constant: 40).isActive = true
+            needSomeHelplabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+            needSomeHelplabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -20).isActive = true
+            
+            mediaButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12).isActive = true
+            mediaButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50).isActive = true
+            mediaButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            mediaButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor).isActive = true
+            mediaButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
+            
+            webButton.topAnchor.constraint(equalTo: needSomeHelplabel.bottomAnchor, constant: 12).isActive = true
+            webButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50).isActive = true
+            webButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            webButton.heightAnchor.constraint(equalTo: mediaButton.widthAnchor).isActive = true
+            webButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
         }
     }
     
     func fetchImage() {
         guard let meal = meal,
               let thumbnail = meal.thumbnailURL else { return }
-        let urlRequest = URLRequest(url: thumbnail)
         let cachedImage = ImageCache.shared.loadCachedImage(forKey: thumbnail)
         
         if cachedImage != nil {
             self.mealImageView.image = cachedImage
         } else {
-            NetworkAgent().fetchImage(urlRequest) { result in
-                switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        self.mealImageView.image = image
-                    }
-                    break
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                }
-            }
+            self.mealImageView.setImage(withURL: thumbnail)
         }
     }
 

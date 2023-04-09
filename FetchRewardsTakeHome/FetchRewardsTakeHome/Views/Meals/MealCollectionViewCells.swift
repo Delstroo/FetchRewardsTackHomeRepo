@@ -20,8 +20,9 @@ private struct CollectionViewUX {
     static let rightInset: CGFloat = 7.0
 }
 
-class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
-    
+class MealCollectionViewCell: UICollectionViewCell {
+    static let cellIdentifier = "MealCollectionViewCell"
+
     var mealSearchResult: MealSearchResult? {
         didSet {
             updateViews()
@@ -143,7 +144,7 @@ class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
     
     func fetchIngredients() {
         guard let mealSearchResult = mealSearchResult else { return }
-        let url = URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php?i=\(mealSearchResult.id)")!
+        let url = URL.apiEndpoint(url: URL.ingredientsURL, query: "i", queryValue: mealSearchResult.id)
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
@@ -172,24 +173,12 @@ class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
         guard let mealSearchResult = mealSearchResult, 
               let thumbnail = mealSearchResult.thumbnail,
               let imageUrl = URL(string: thumbnail) else { return }
-        let urlRequest = URLRequest(url: imageUrl)
         let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
         
         if cachedImage != nil {
             self.mealImageView.image = cachedImage
         } else {
-            // Call fetchImage function with the URLRequest and a completion handler
-            NetworkAgent().fetchImage(urlRequest) { result in
-                switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        self.mealImageView.image = image
-                    }
-                    break
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                }
-            }
+            self.mealImageView.setImage(withURL: imageUrl)
         }
     }
 }

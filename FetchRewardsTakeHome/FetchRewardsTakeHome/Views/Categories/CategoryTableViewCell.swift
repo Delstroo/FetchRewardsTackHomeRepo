@@ -77,24 +77,11 @@ class CategoryTableViewCell: UITableViewCell {
     func fetchImages(with category: Category) {
     
         guard let imageUrl = URL(string: category.thumbnail) else { return }
-        let urlRequest = URLRequest(url: imageUrl)
         let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
-        
         if cachedImage != nil {
             self.categoryImageView.image = cachedImage
         } else {
-            // Call fetchImage function with the URLRequest and a completion handler
-            NetworkAgent().fetchImage(urlRequest) { result in
-                switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        self.categoryImageView.image = image
-                    }
-                    break
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
-                }
-            }
+            self.categoryImageView.setImage(withURL: imageUrl)
         }
     }
     
