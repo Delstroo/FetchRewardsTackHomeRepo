@@ -105,7 +105,6 @@ class InstrucationViewController: UIViewController {
         super.viewDidLoad()
         setupScrollView()
         setupLayout()
-        
         fetchAllIngredients()
     }
     

@@ -29,7 +29,6 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
         fetchCategories()
         tableView.delegate = self
         tableView.dataSource = self
-        // Do any additional setup after loading the view.
     }
     
     // MARK: - Setup Methods

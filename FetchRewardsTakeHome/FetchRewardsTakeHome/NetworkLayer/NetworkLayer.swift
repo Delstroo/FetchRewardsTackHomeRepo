@@ -10,7 +10,6 @@ import UIKit
 
 struct NetworkAgent {
     func fetch<T: Codable>(_ request: URLRequest, completion: @escaping (Result<T, NetworkError>) -> Void) {
-        // First, check if the response is already available in the cache
             if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
                 do {
                     let decoder = JSONDecoder()
@@ -22,7 +21,6 @@ struct NetworkAgent {
                 return
             }
             
-            // If not available in cache, then make a network request
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     completion(.failure(generateNetworkError(from: error)))
@@ -36,7 +34,6 @@ struct NetworkAgent {
                     return
                 }
                 
-                // Cache the received JSON data
                 if let httpResponse = response {
                     let cachedResponse = CachedURLResponse(response: httpResponse, data: data)
                     URLCache.shared.storeCachedResponse(cachedResponse, for: request)

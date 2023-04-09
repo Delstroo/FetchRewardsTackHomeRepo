@@ -34,16 +34,12 @@ class MealCollectionViewCell: UICollectionViewCell, ReusableCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        // Apply rounded corners to contentView
         contentView.layer.cornerRadius = CollectionViewUX.generalCornerRadius
         contentView.layer.masksToBounds = true
         
-        // Set masks to bounds to false to avoid the shadow
-        // from being clipped to the corner radius
         layer.cornerRadius = CollectionViewUX.generalCornerRadius
         layer.masksToBounds = false
         
-        // Apply a shadow
         layer.shadowRadius = 8.0
         layer.shadowOpacity = 0.12
         layer.shadowColor = UIColor.label.cgColor
