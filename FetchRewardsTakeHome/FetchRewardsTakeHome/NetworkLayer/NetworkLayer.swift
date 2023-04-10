@@ -8,7 +8,10 @@
 import Foundation
 import UIKit
 
-struct NetworkAgent {
+class NetworkAgent {
+    
+    static let shared = NetworkAgent()
+    
     func fetch<T: Codable>(_ request: URLRequest, completion: @escaping (Result<T, NetworkError>) -> Void) {
             if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
                 do {
@@ -23,7 +26,7 @@ struct NetworkAgent {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
-                    completion(.failure(generateNetworkError(from: error)))
+                    completion(.failure(self.generateNetworkError(from: error)))
                     return
                 }
                 
@@ -49,10 +52,10 @@ struct NetworkAgent {
             }.resume()
         }
     
-    func fetchImage(_ request: URLRequest, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<UIImage, NetworkError>) -> Void) {
+    func fetchImage(_ request: URLRequest, completion: @escaping (Result<UIImage, NetworkError>) -> Void) {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                completion(.failure(generateNetworkError(from: error)))
+                completion(.failure(self.generateNetworkError(from: error)))
                 return
             }
             

@@ -21,8 +21,11 @@ private struct CollectionViewUX {
 }
 
 class MealCollectionViewCell: UICollectionViewCell {
-    static let cellIdentifier = "MealCollectionViewCell"
-
+    static let cellIdentifier = {
+        return String(describing: MealCollectionViewCell.self)
+    }
+    
+    let networkAgent = NetworkAgent()
     var mealSearchResult: MealSearchResult? {
         didSet {
             updateViews()
@@ -148,7 +151,7 @@ class MealCollectionViewCell: UICollectionViewCell {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        NetworkAgent().fetch(request) { (result: Result<MealResponse, NetworkError>) in
+        NetworkAgent.shared.fetch(request) { (result: Result<MealResponse, NetworkError>) in
             switch result {
             case .success(let meal):
                 DispatchQueue.main.async {

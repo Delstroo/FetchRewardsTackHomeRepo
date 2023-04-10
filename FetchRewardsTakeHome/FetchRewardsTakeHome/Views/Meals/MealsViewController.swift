@@ -28,7 +28,7 @@ class MealsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: MealCollectionViewCell.cellIdentifier)
+        collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: MealCollectionViewCell.cellIdentifier())
         setupCollectionView()
         fetchMeals()
         collectionView.delegate = self
@@ -60,28 +60,25 @@ class MealsViewController: UIViewController {
     
     // MARK: - Helper Funcs
     func fetchMeals() {
-        let url = URL.apiEndpoint(url: URL.mealListURL, query: "c", queryValue: category.name)
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.get.rawValue
-
-        NetworkAgent().fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
+        let viewModel = MealsViewModel(category: category)
+        viewModel.fetchMeals(completion: { [weak self] result in
             switch result {
-            case .success(let mealResponse):
-                self.mealSearchResults = mealResponse.meals.sorted(by: { $0.name < $1.name })
+            case .success(let meals):
+                self?.mealSearchResults = meals
                 DispatchQueue.main.async {
-                    self.collectionView.reloadData()    
+                    self?.collectionView.reloadData()
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        } 
+        })
     }
 }
 
 // MARK: - CollectionView Delegate and DataSource Extensions
 extension MealsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MealCollectionViewCell.cellIdentifier, for: indexPath) as? MealCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MealCollectionViewCell.cellIdentifier(), for: indexPath) as? MealCollectionViewCell else { return UICollectionViewCell() }
         let mealSearchResult = mealSearchResults[indexPath.row]
         cell.setupLayout()
         cell.mealSearchResult = mealSearchResult

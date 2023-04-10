@@ -11,6 +11,7 @@ class InstrucationViewController: UIViewController {
 
     // MARK: - Variables
     
+    let networkAgent = NetworkAgent()
     var meal: Meal?
     var mealSearchResult: MealSearchResult
     var strings: [String] = []
@@ -187,21 +188,18 @@ class InstrucationViewController: UIViewController {
     // MARK: - Helper Functions
     
     func fetchAllIngredients() {
-        let url = URL.apiEndpoint(url: URL.ingredientsURL, query: "i", queryValue: mealSearchResult.id)
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.get.rawValue
-
-        NetworkAgent().fetch(request) { (result: Result<MealResponse, NetworkError>) in
+        let viewModel = InstructionViewModel(mealSearchResult: self.mealSearchResult)
+        viewModel.fetchAllIngredients { result in
             switch result {
             case .success(let meal):
                 DispatchQueue.main.async {
-                    self.meal = meal.meals[0]
+                    self.meal = meal
                     self.updateViews()
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        } 
+        }
     }
     
     @objc func mediaButtonTapped() {
@@ -226,7 +224,7 @@ class InstrucationViewController: UIViewController {
         ingredientsLabel.text = strings.joined(separator: "\n")
         shouldShowButtons(meal: meal)
         showLabels()
-        fetchImage()
+        fetchMealImage()
     }
     
     func showLabels() {
@@ -267,16 +265,18 @@ class InstrucationViewController: UIViewController {
         }
     }
     
-    func fetchImage() {
-        guard let meal = meal,
-              let thumbnail = meal.thumbnailURL else { return }
-        let cachedImage = ImageCache.shared.loadCachedImage(forKey: thumbnail)
-        
-        if cachedImage != nil {
-            self.mealImageView.image = cachedImage
-        } else {
-            self.mealImageView.setImage(withURL: thumbnail)
+    func fetchMealImage() {
+        let viewModel = InstructionViewModel(mealSearchResult: self.mealSearchResult)
+        viewModel.meal = self.meal
+        viewModel.fetchImage { result in
+            switch result {
+            case .success(let image):
+                DispatchQueue.main.async {
+                    self.mealImageView.image = image
+                }
+            case .failure(let error):
+                print("Error fetching meal image: \(error)")
+            }
         }
     }
-
 }

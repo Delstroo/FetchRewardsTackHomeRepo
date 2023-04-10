@@ -9,7 +9,9 @@ import UIKit
 
 class CategoryTableViewCell: UITableViewCell {
     
-    static let cellIdentifier = "CategoryTableViewCell"
+    static let cellIdentifier = {
+        return String(describing: CategoryTableViewCell.self)
+    }
     
     private lazy var cellBackgroundView: UIView = .build { view in
         view.backgroundColor = UIColor.secondarySystemBackground.withAlphaComponent(1)

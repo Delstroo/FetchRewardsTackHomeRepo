@@ -10,7 +10,8 @@ import UIKit
 class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: - Variables
-    
+    let networkAgent = NetworkAgent()
+    let viewModel = CategoryViewModel()
     var categories: [Category] = [] 
     
     // MARK: - UI Elements
@@ -46,27 +47,22 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Helper Funcs
     
     private func configureTableViewCell() {
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.cellIdentifier)
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.cellIdentifier())
     }
     
     func fetchCategories() {
-        let url = URL.categoryURL
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.get.rawValue
-        
-        NetworkAgent().fetch(request) { (result: Result<CategoryResults, NetworkError>) in
+        viewModel.fetchCategories { [weak self] result in
             switch result {
             case .success(let categories):
-                self.categories = categories.categories.sorted(by: { $0.name < $1.name })
+                self?.categories = categories
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()    
+                    self?.tableView.reloadData()
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
             }
-        } 
+        }
     }
-
 } 
 
 // MARK: - TableView Delegate and DataSource Extensions
@@ -77,7 +73,7 @@ extension CategoryViewController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let categoryCell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.cellIdentifier, for: indexPath) as? CategoryTableViewCell else{ return UITableViewCell() }
+        guard let categoryCell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.cellIdentifier(), for: indexPath) as? CategoryTableViewCell else{ return UITableViewCell() }
         categoryCell.updateViews(with: categories[indexPath.row])
         return categoryCell
     }
