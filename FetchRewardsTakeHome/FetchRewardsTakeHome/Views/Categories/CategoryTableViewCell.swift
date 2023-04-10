@@ -14,12 +14,14 @@ class CategoryTableViewCell: UITableViewCell {
     }
     
     private lazy var cellBackgroundView: UIView = .build { view in
-        view.backgroundColor = UIColor.secondarySystemBackground.withAlphaComponent(1)
+        view.backgroundColor = .systemBackground
+        view.layer.borderColor = UIColor.secondarySystemBackground.withAlphaComponent(0.33).cgColor
+        view.layer.borderWidth = 1.0
         view.layer.cornerRadius = 20
 
         view.layer.shadowColor = UIColor.label.cgColor
         view.layer.shadowOpacity = 0.25
-        view.layer.shadowOffset = CGSize(width: 2, height: 2)
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowRadius = 4
         view.layer.masksToBounds = false
     }
@@ -79,12 +81,7 @@ class CategoryTableViewCell: UITableViewCell {
     func fetchImages(with category: Category) {
     
         guard let imageUrl = URL(string: category.thumbnail) else { return }
-        let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
-        if cachedImage != nil {
-            self.categoryImageView.image = cachedImage
-        } else {
-            self.categoryImageView.setImage(withURL: imageUrl)
-        }
+        self.categoryImageView.downloadAndSetImage(from: imageUrl.absoluteString)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

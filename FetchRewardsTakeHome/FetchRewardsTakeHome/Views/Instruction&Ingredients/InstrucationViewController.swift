@@ -11,7 +11,7 @@ class InstrucationViewController: UIViewController {
 
     // MARK: - Variables
     
-    let networkAgent = NetworkAgent()
+    let networkAgent = NetworkLayer()
     var meal: Meal?
     var mealSearchResult: MealSearchResult
     var strings: [String] = []
@@ -266,17 +266,7 @@ class InstrucationViewController: UIViewController {
     }
     
     func fetchMealImage() {
-        let viewModel = InstructionViewModel(mealSearchResult: self.mealSearchResult)
-        viewModel.meal = self.meal
-        viewModel.fetchImage { result in
-            switch result {
-            case .success(let image):
-                DispatchQueue.main.async {
-                    self.mealImageView.image = image
-                }
-            case .failure(let error):
-                print("Error fetching meal image: \(error)")
-            }
-        }
+        guard let url = meal?.thumbnailURL else { return }
+        self.mealImageView.downloadAndSetImage(from: url.absoluteString)
     }
 }

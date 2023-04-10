@@ -28,9 +28,9 @@ enum NetworkError: LocalizedError {
     }
 }
 
-class NetworkAgent {
+class NetworkLayer {
     
-    static let shared = NetworkAgent()
+    static let shared = NetworkLayer()
     
     func fetch<T: Codable>(_ request: URLRequest, completion: @escaping (Result<T, NetworkError>) -> Void) {
             if let cachedResponse = URLCache.shared.cachedResponse(for: request) {
@@ -91,8 +91,6 @@ class NetworkAgent {
             }
             
             if let image = UIImage(data: data) {
-                guard let url = request.url else { return }
-                ImageCache.shared.setImage(image, forKey: url)
                 completion(.success(image))
             } else {
                 completion(.failure(.noData))

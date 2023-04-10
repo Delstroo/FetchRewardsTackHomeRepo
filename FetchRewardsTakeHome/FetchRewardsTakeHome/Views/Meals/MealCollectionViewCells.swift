@@ -25,7 +25,7 @@ class MealCollectionViewCell: UICollectionViewCell {
         return String(describing: MealCollectionViewCell.self)
     }
     
-    let networkAgent = NetworkAgent()
+    let networkAgent = NetworkLayer()
     var mealSearchResult: MealSearchResult? {
         didSet {
             updateViews()
@@ -64,7 +64,7 @@ class MealCollectionViewCell: UICollectionViewCell {
         view.layer.masksToBounds = true
         view.layer.cornerRadius = CollectionViewUX.generalCornerRadius
         view.backgroundColor = .systemBackground
-        view.layer.borderColor = UIColor.secondarySystemBackground.withAlphaComponent(0.15).cgColor
+        view.layer.borderColor = UIColor.secondarySystemBackground.withAlphaComponent(0.33).cgColor
         view.layer.borderWidth = 1.0
         view.layer.cornerRadius = CollectionViewUX.generalCornerRadius
         view.layer.masksToBounds = false
@@ -151,7 +151,7 @@ class MealCollectionViewCell: UICollectionViewCell {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        NetworkAgent.shared.fetch(request) { (result: Result<MealResponse, NetworkError>) in
+        NetworkLayer.shared.fetch(request) { (result: Result<MealResponse, NetworkError>) in
             switch result {
             case .success(let meal):
                 DispatchQueue.main.async {
@@ -174,14 +174,8 @@ class MealCollectionViewCell: UICollectionViewCell {
     
     func fetchImages() {
         guard let mealSearchResult = mealSearchResult, 
-              let thumbnail = mealSearchResult.thumbnail,
+                let thumbnail = mealSearchResult.thumbnail,
               let imageUrl = URL(string: thumbnail) else { return }
-        let cachedImage = ImageCache.shared.loadCachedImage(forKey: imageUrl)
-        
-        if cachedImage != nil {
-            self.mealImageView.image = cachedImage
-        } else {
-            self.mealImageView.setImage(withURL: imageUrl)
-        }
+        self.mealImageView.downloadAndSetImage(from: imageUrl.absoluteString)
     }
 }

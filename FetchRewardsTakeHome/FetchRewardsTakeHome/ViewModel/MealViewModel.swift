@@ -8,7 +8,7 @@
 import Foundation
 
 class MealsViewModel {
-    private let networkAgent = NetworkAgent()
+    private let networkAgent = NetworkLayer()
     private var mealSearchResults: [MealSearchResult] = []
     var category: Category
     
@@ -21,7 +21,7 @@ class MealsViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
 
-        NetworkAgent.shared.fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
+        NetworkLayer.shared.fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
             switch result {
             case .success(let mealResponse):
                 self.mealSearchResults = mealResponse.meals.sorted(by: { $0.name < $1.name })

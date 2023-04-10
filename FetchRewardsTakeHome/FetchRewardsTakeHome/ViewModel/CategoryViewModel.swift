@@ -21,7 +21,7 @@ class CategoryViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
 
-        NetworkAgent.shared.fetch(request) { (result: Result<CategoryResults, NetworkError>) in
+        NetworkLayer.shared.fetch(request) { (result: Result<CategoryResults, NetworkError>) in
             switch result {
             case .success(let categoryResults):
                 let categories = categoryResults.categories.sorted(by: { $0.name < $1.name })

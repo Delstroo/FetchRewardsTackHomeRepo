@@ -7,47 +7,32 @@
 
 import UIKit
 
-class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CategoryViewController: UIViewController {
 
     // MARK: - Variables
-    let networkAgent = NetworkAgent()
+    let categoryTableView = CategoryTableView()
+    let networkAgent = NetworkLayer()
     let viewModel = CategoryViewModel()
     var categories: [Category] = [] 
-    
-    // MARK: - UI Elements
-    
-    lazy private var tableView: UITableView = .build { tableView in
-        tableView.separatorColor = .clear
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-    }
     
     // MARK: - Life Cycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
         configureTableViewCell()
         fetchCategories()
-        tableView.delegate = self
-        tableView.dataSource = self
+        categoryTableView.tableView.delegate = self
+        categoryTableView.tableView.dataSource = self
     }
     
-    // MARK: - Setup Methods
-    
-    private func setupTableView() {
-        view.addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+    override func loadView() {
+        view = categoryTableView
     }
-    
+
     // MARK: - Helper Funcs
     
     private func configureTableViewCell() {
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.cellIdentifier())
+        categoryTableView.tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.cellIdentifier())
     }
     
     func fetchCategories() {
@@ -56,7 +41,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
             case .success(let categories):
                 self?.categories = categories
                 DispatchQueue.main.async {
-                    self?.tableView.reloadData()
+                    self?.categoryTableView.tableView.reloadData()
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
@@ -67,7 +52,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
 
 // MARK: - TableView Delegate and DataSource Extensions
 
-extension CategoryViewController {
+extension CategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         categories.count
     }

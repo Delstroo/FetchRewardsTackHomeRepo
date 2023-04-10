@@ -12,27 +12,22 @@ class MealsViewController: UIViewController {
     // MARK: - Variables
     
     var category: Category
+    var mealsCollectionView = MealsCollectionView()
     var mealSearchResults: [MealSearchResult] = []
-    
-    let layout = UICollectionViewFlowLayout()
-    lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = UIColor.white
-        collectionView.layer.cornerRadius = 20
-        return collectionView
-    }()
     
     // MARK: - Life cycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: MealCollectionViewCell.cellIdentifier())
-        setupCollectionView()
+        mealsCollectionView.collectionView.register(MealCollectionViewCell.self, forCellWithReuseIdentifier: MealCollectionViewCell.cellIdentifier())
         fetchMeals()
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        mealsCollectionView.collectionView.delegate = self
+        mealsCollectionView.collectionView.dataSource = self
+    }
+    
+    override func loadView() {
+        super.loadView()
+        view = mealsCollectionView
     }
     
     // MARK: - Initializer
@@ -46,18 +41,6 @@ class MealsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup Methods
-    
-    private func setupCollectionView() {
-        view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor)
-        ])
-    }
-    
     // MARK: - Helper Funcs
     func fetchMeals() {
         let viewModel = MealsViewModel(category: category)
@@ -66,7 +49,7 @@ class MealsViewController: UIViewController {
             case .success(let meals):
                 self?.mealSearchResults = meals
                 DispatchQueue.main.async {
-                    self?.collectionView.reloadData()
+                    self?.mealsCollectionView.collectionView.reloadData()
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n--\n \(error)")
