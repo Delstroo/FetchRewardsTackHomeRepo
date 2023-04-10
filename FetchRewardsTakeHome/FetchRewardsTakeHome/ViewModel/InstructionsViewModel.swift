@@ -8,16 +8,13 @@
 import UIKit
 
 class InstructionViewModel {
-    private let networkAgent = NetworkLayer()
-    var meal: Meal?
     private var mealSearchResult: MealSearchResult
-    private var strings: [String] = []
     
     init(mealSearchResult: MealSearchResult) {
         self.mealSearchResult = mealSearchResult
     }
     
-    func fetchAllIngredients(completion: @escaping (Result<Meal, NetworkError>) -> Void) {
+    func fetchAllIngredients(networkLayer: NetworkLayer, completion: @escaping (Result<Meal, NetworkError>) -> Void) {
         let url = URL.apiEndpoint(url: URL.ingredientsURL, query: "i", queryValue: mealSearchResult.id)
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue

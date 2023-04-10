@@ -11,8 +11,8 @@ class CategoryViewController: UIViewController {
 
     // MARK: - Variables
     let categoryTableView = CategoryTableView()
-    let networkAgent = NetworkLayer()
-    let viewModel = CategoryViewModel()
+    private let networkLayer = NetworkLayer()
+    private let viewModel = CategoryViewModel()
     var categories: [Category] = [] 
     
     // MARK: - Life Cycle Methods
@@ -36,7 +36,7 @@ class CategoryViewController: UIViewController {
     }
     
     func fetchCategories() {
-        viewModel.fetchCategories { [weak self] result in
+        viewModel.fetchCategories(networkLayer: networkLayer) { [weak self] result in
             switch result {
             case .success(let categories):
                 self?.categories = categories

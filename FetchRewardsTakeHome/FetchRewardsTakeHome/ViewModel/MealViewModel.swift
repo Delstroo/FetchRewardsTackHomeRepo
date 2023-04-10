@@ -8,7 +8,6 @@
 import Foundation
 
 class MealsViewModel {
-    private let networkAgent = NetworkLayer()
     private var mealSearchResults: [MealSearchResult] = []
     var category: Category
     
@@ -16,12 +15,12 @@ class MealsViewModel {
         self.category = category
     }
     
-    func fetchMeals(completion: @escaping (Result<[MealSearchResult], NetworkError>) -> Void) {
+    func fetchMeals(networkLayer: NetworkLayer, completion: @escaping (Result<[MealSearchResult], NetworkError>) -> Void) {
         let url = URL.apiEndpoint(url: URL.mealListURL, query: "c", queryValue: category.name)
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
 
-        NetworkLayer.shared.fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
+        networkLayer.fetch(request) { (result: Result<MealSearchResponse, NetworkError>) in
             switch result {
             case .success(let mealResponse):
                 self.mealSearchResults = mealResponse.meals.sorted(by: { $0.name < $1.name })

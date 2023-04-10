@@ -29,6 +29,7 @@
 		828BEE5F29E085B9003D4A5E /* MealsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828BEE5E29E085B9003D4A5E /* MealsViewController.swift */; };
 		828BEE6129E08B2A003D4A5E /* MealCollectionViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828BEE6029E08B2A003D4A5E /* MealCollectionViewCells.swift */; };
 		828BEE6329E0904D003D4A5E /* InstrucationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828BEE6229E0904D003D4A5E /* InstrucationViewController.swift */; };
+		82925CC529E3C47000390209 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82925CC429E3C47000390209 /* InstructionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		828BEE5E29E085B9003D4A5E /* MealsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealsViewController.swift; sourceTree = "<group>"; };
 		828BEE6029E08B2A003D4A5E /* MealCollectionViewCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCollectionViewCells.swift; sourceTree = "<group>"; };
 		828BEE6229E0904D003D4A5E /* InstrucationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrucationViewController.swift; sourceTree = "<group>"; };
+		82925CC429E3C47000390209 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				828BEE6229E0904D003D4A5E /* InstrucationViewController.swift */,
+				82925CC429E3C47000390209 /* InstructionView.swift */,
 			);
 			path = "Instruction&Ingredients";
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				823D396C29E3AEA700C33D8D /* Extension+UILabel.swift in Sources */,
 				823D397429E3BE4900C33D8D /* MealsCollectionView.swift in Sources */,
 				828BEE4F29DE185F003D4A5E /* NetworkLayer.swift in Sources */,
+				82925CC529E3C47000390209 /* InstructionView.swift in Sources */,
 				825DBC1829DDD31A00BF5447 /* MealResponseModel.swift in Sources */,
 				825DBC1429DDD2F300BF5447 /* CategpryResultsModel.swift in Sources */,
 				823D395F29E3181700C33D8D /* Extension+URL.swift in Sources */,

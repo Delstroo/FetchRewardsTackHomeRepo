@@ -11,17 +11,14 @@ import Foundation
 
 class CategoryViewModel {
     
-    // MARK: - Variables
-    var categories: [Category] = []
-    
     // MARK: - Fetch Categories
 
-    func fetchCategories(completion: @escaping (Result<[Category], NetworkError>) -> Void) {
+    func fetchCategories(networkLayer: NetworkLayer, completion: @escaping (Result<[Category], NetworkError>) -> Void) {
         let url = URL.categoryURL
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.get.rawValue
 
-        NetworkLayer.shared.fetch(request) { (result: Result<CategoryResults, NetworkError>) in
+        networkLayer.fetch(request) { (result: Result<CategoryResults, NetworkError>) in
             switch result {
             case .success(let categoryResults):
                 let categories = categoryResults.categories.sorted(by: { $0.name < $1.name })

@@ -12,6 +12,7 @@ class MealsViewController: UIViewController {
     // MARK: - Variables
     
     var category: Category
+    private let networkLayer = NetworkLayer()
     var mealsCollectionView = MealsCollectionView()
     var mealSearchResults: [MealSearchResult] = []
     
@@ -44,7 +45,7 @@ class MealsViewController: UIViewController {
     // MARK: - Helper Funcs
     func fetchMeals() {
         let viewModel = MealsViewModel(category: category)
-        viewModel.fetchMeals(completion: { [weak self] result in
+        viewModel.fetchMeals(networkLayer: networkLayer, completion: { [weak self] result in
             switch result {
             case .success(let meals):
                 self?.mealSearchResults = meals

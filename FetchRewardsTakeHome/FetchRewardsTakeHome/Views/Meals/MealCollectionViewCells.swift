@@ -25,7 +25,6 @@ class MealCollectionViewCell: UICollectionViewCell {
         return String(describing: MealCollectionViewCell.self)
     }
     
-    let networkAgent = NetworkLayer()
     var mealSearchResult: MealSearchResult? {
         didSet {
             updateViews()
