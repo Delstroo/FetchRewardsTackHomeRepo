@@ -72,32 +72,6 @@ class NetworkLayer {
             }.resume()
         }
     
-    func fetchImage(_ request: URLRequest, completion: @escaping (Result<UIImage, NetworkError>) -> Void) {
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(self.generateNetworkError(from: error)))
-                return
-            }
-            
-            guard let data = data, !data.isEmpty,
-                  let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                return
-            }
-            
-            guard response is HTTPURLResponse else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            if let image = UIImage(data: data) {
-                completion(.success(image))
-            } else {
-                completion(.failure(.noData))
-            }
-        }.resume()
-    }
-    
     private func generateNetworkError(from error: Error?) -> NetworkError {
         if let error = error {
             if let urlError = error as? URLError {
