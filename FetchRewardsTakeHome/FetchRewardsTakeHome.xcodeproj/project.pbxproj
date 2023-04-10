@@ -15,7 +15,6 @@
 		825DBBF429DDD1A900BF5447 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBBF329DDD1A900BF5447 /* SceneDelegate.swift */; };
 		825DBBFB29DDD1A900BF5447 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 825DBBFA29DDD1A900BF5447 /* Assets.xcassets */; };
 		825DBBFE29DDD1A900BF5447 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 825DBBFC29DDD1A900BF5447 /* LaunchScreen.storyboard */; };
-		825DBC0C29DDD26C00BF5447 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC0B29DDD26C00BF5447 /* NetworkError.swift */; };
 		825DBC0E29DDD28500BF5447 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC0D29DDD28500BF5447 /* ViewExtension.swift */; };
 		825DBC1429DDD2F300BF5447 /* CategpryResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1329DDD2F300BF5447 /* CategpryResultsModel.swift */; };
 		825DBC1629DDD30500BF5447 /* MealSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 825DBC1529DDD30500BF5447 /* MealSearchModel.swift */; };
@@ -40,7 +39,6 @@
 		825DBBFA29DDD1A900BF5447 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		825DBBFD29DDD1A900BF5447 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		825DBBFF29DDD1A900BF5447 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		825DBC0B29DDD26C00BF5447 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		825DBC0D29DDD28500BF5447 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		825DBC1329DDD2F300BF5447 /* CategpryResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategpryResultsModel.swift; sourceTree = "<group>"; };
 		825DBC1529DDD30500BF5447 /* MealSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealSearchModel.swift; sourceTree = "<group>"; };
@@ -147,7 +145,6 @@
 		825DBC0A29DDD24800BF5447 /* ExtensionsAndHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				825DBC0B29DDD26C00BF5447 /* NetworkError.swift */,
 				825DBC0D29DDD28500BF5447 /* ViewExtension.swift */,
 				823D395E29E3181700C33D8D /* URLExtensions.swift */,
 			);
@@ -259,7 +256,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				825DBC0C29DDD26C00BF5447 /* NetworkError.swift in Sources */,
 				825DBBF229DDD1A900BF5447 /* AppDelegate.swift in Sources */,
 				828BEE6129E08B2A003D4A5E /* MealCollectionViewCells.swift in Sources */,
 				828BEE6329E0904D003D4A5E /* InstrucationViewController.swift in Sources */,
